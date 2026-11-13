@@ -1,0 +1,177 @@
+{
+  "info": {
+    "name": "Diploma Plan Service",
+    "description": "Plan service API through diploma-gateway (`/api/plan/**` \u2192 plan-service).\n\nTo bypass the gateway, set `baseUrl` to `{{directUrl}}/api/plan`.\n\nFlow: **Generate plan** \u2192 poll **Get plan details** until DONE/FAILED \u2192 **List trip plans**.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Plans",
+      "item": [
+        {
+          "name": "Generate plan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/plans?userId={{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "plans"
+              ],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "{{userId}}"
+                }
+              ]
+            },
+            "description": "Starts generating a plan in the background (202 Accepted). Saves the new plan id to the `planId` variable. Poll **Get plan details** until `status` is DONE or FAILED.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tripId\": {{tripId}},\n  \"provider\": \"{{provider}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 202\", () => pm.response.to.have.status(202));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"Response is successful\", () => pm.expect(body.success).to.be.true);",
+                  "if (body.data && body.data.id) {",
+                  "    pm.collectionVariables.set(\"planId\", body.data.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get plan details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/plans/{{planId}}?userId={{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "plans",
+                "{{planId}}"
+              ],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "{{userId}}"
+                }
+              ]
+            },
+            "description": "Initial and optimized variants with their items and reviews. Repeat until `status` is DONE or FAILED."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "const data = pm.response.json().data;",
+                  "console.log(`Plan ${data.id}: ${data.status}`);",
+                  "pm.test(\"Has a status\", () => pm.expect(data.status).to.be.oneOf([\"PENDING\",\"GENERATING\",\"OPTIMIZING\",\"REVIEWING\",\"DONE\",\"FAILED\"]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List trip plans",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/plans?tripId={{tripId}}&userId={{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "plans"
+              ],
+              "query": [
+                {
+                  "key": "tripId",
+                  "value": "{{tripId}}"
+                },
+                {
+                  "key": "userId",
+                  "value": "{{userId}}"
+                }
+              ]
+            },
+            "description": "All generated plans of the trip, newest first."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Returns a list\", () => pm.expect(pm.response.json().data).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "gatewayUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "directUrl",
+      "value": "http://localhost:9092"
+    },
+    {
+      "key": "baseUrl",
+      "value": "{{gatewayUrl}}/api/plan"
+    },
+    {
+      "key": "userId",
+      "value": "1"
+    },
+    {
+      "key": "tripId",
+      "value": "1"
+    },
+    {
+      "key": "provider",
+      "value": "ANTHROPIC"
+    },
+    {
+      "key": "planId",
+      "value": ""
+    }
+  ]
+}
