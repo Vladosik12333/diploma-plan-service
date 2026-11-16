@@ -31,24 +31,24 @@ public class PlanGenerationWorkerImpl implements PlanGenerationWorker {
 
 	@Override
 	@Async
-	public void generate(Long planId, TripResponse trip, LlmProvider provider) {
+	public void generate(final Long planId, final TripResponse trip, final LlmProvider provider) {
 		try {
 			generatedPlanService.updateStatus(planId, GenerationStatus.GENERATING);
 
-			LlmPlan llmPlan = llmClient.call(provider, promptFactory.planPrompt(trip),
+			final LlmPlan llmPlan = llmClient.call(provider, promptFactory.planPrompt(trip),
 					LlmPlan.class);
 
-			PlanVariant initial = planVariantService.createInitial(planId, llmPlan);
+			final PlanVariant initial = planVariantService.createInitial(planId, llmPlan);
 
 			generatedPlanService.updateStatus(planId, GenerationStatus.REVIEWING);
 
-			LlmReview llmReview = llmClient.call(provider,
+			final LlmReview llmReview = llmClient.call(provider,
 					promptFactory.reviewPrompt(trip, initial), LlmReview.class);
 
 			planReviewService.create(initial, provider, llmReview);
 
 			generatedPlanService.updateStatus(planId, GenerationStatus.DONE);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			log.error("Plan generation failed. planId={}, provider={}", planId, provider, e);
 			generatedPlanService.updateStatus(planId, GenerationStatus.FAILED);
 		}

@@ -11,7 +11,7 @@ import org.springframework.web.service.registry.ImportHttpServices;
 @ImportHttpServices(group = "trip-service", types = TripServiceClient.class)
 public class DiplomaPlanServiceApplication {
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		SpringApplication.run(DiplomaPlanServiceApplication.class, args);
 	}
 

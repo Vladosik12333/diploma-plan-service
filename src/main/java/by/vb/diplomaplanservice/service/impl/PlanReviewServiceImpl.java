@@ -24,8 +24,8 @@ public class PlanReviewServiceImpl implements PlanReviewService {
 
 	@Override
 	@Transactional
-	public PlanReview create(PlanVariant variant, LlmProvider reviewer, LlmReview llmReview) {
-		PlanReview review = new PlanReview();
+	public PlanReview create(final PlanVariant variant, final LlmProvider reviewer, final LlmReview llmReview) {
+		final PlanReview review = new PlanReview();
 
 		review.setPlanVariant(variant);
 		review.setProvider(reviewer);
@@ -41,7 +41,7 @@ public class PlanReviewServiceImpl implements PlanReviewService {
 		review.setSummary(
 				StringUtils.truncate(llmReview.summary(), PlanConstants.SUMMARY_MAX_LENGTH));
 
-		PlanReview saved = planReviewRepository.save(review);
+		final PlanReview saved = planReviewRepository.save(review);
 
 		log.info("Saved review. planVariantId={}, overallScore={}", variant.getId(),
 				saved.getOverallScore());
@@ -49,7 +49,7 @@ public class PlanReviewServiceImpl implements PlanReviewService {
 		return saved;
 	}
 
-	private Integer toScore(Integer score) {
+	private Integer toScore(final Integer score) {
 		if (score == null || score < PlanConstants.MIN_SCORE || score > PlanConstants.MAX_SCORE) {
 			return null;
 		}

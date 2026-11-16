@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class GeneratedPlanSummaryResponseMapper implements Mapper<GeneratedPlan, GeneratedPlanSummaryResponse> {
 	@Override
-	public GeneratedPlanSummaryResponse mapTo(GeneratedPlan entity) {
+	public GeneratedPlanSummaryResponse mapTo(final GeneratedPlan entity) {
 		return new GeneratedPlanSummaryResponse(entity.getId(), entity.getTripId(), entity.getStatus(),
 				entity.getProvider(), entity.getModel(), entity.getCreatedAt());
 	}

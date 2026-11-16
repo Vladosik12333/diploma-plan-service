@@ -18,14 +18,14 @@ public class LlmConfig {
 	@Value("${llm.anthropic.effort}") String effort;
 
 	@Bean
-	public Map<LlmProvider, ChatClient> chatClients(AnthropicChatModel anthropicChatModel,
-			OpenAiChatModel openAiChatModel) {
-		ChatClient anthropicChatClient = ChatClient.builder(anthropicChatModel)
+	public Map<LlmProvider, ChatClient> chatClients(final AnthropicChatModel anthropicChatModel,
+			final OpenAiChatModel openAiChatModel) {
+		final ChatClient anthropicChatClient = ChatClient.builder(anthropicChatModel)
 				.defaultOptions(AnthropicChatOptions.builder().effort(OutputConfig.Effort.of(effort)))
 				.defaultAdvisors(AdvisorParams.ENABLE_NATIVE_STRUCTURED_OUTPUT)
 				.build();
 
-		ChatClient openAiChatClient = ChatClient.builder(openAiChatModel)
+		final ChatClient openAiChatClient = ChatClient.builder(openAiChatModel)
 				.defaultAdvisors(AdvisorParams.ENABLE_NATIVE_STRUCTURED_OUTPUT)
 				.build();
 
@@ -35,8 +35,8 @@ public class LlmConfig {
 	}
 
 	@Bean
-	public Map<LlmProvider, String> chatModelNames(AnthropicChatModel anthropicChatModel,
-			OpenAiChatModel openAiChatModel) {
+	public Map<LlmProvider, String> chatModelNames(final AnthropicChatModel anthropicChatModel,
+			final OpenAiChatModel openAiChatModel) {
 		return Map.of(
 				LlmProvider.ANTHROPIC, anthropicChatModel.getOptions().getModel(),
 				LlmProvider.OPENAI, openAiChatModel.getOptions().getModel());

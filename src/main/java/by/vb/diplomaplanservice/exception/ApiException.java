@@ -5,12 +5,12 @@ import org.springframework.http.HttpStatus;
 public class ApiException extends RuntimeException {
 	private final HttpStatus status;
 
-	public ApiException(HttpStatus status, String message) {
+	public ApiException(final HttpStatus status, final String message) {
 		super(message);
 		this.status = status;
 	}
 
-	public ApiException(HttpStatus status, String message, Throwable cause) {
+	public ApiException(final HttpStatus status, final String message, final Throwable cause) {
 		super(message, cause);
 		this.status = status;
 	}

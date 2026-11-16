@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 	@ExceptionHandler(ApiException.class)
 	public ResponseEntity<BasicResponse<Void>> handleApiException(
-			ApiException exception
+			final ApiException exception
 	) {
 		log.warn("Request failed with status {}: {}", exception.getStatus(), exception.getMessage());
 
@@ -31,11 +31,11 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ApiResponse(responseCode = "400", description = "Request validation failed")
 	public ResponseEntity<BasicResponse<Void>> handleMethodArgumentNotValid(
-			MethodArgumentNotValidException exception
+			final MethodArgumentNotValidException exception
 	) {
 		log.warn("Request validation failed: {}", exception.getBindingResult().getFieldErrors());
 
-		String message = exception.getBindingResult().getFieldErrors().stream()
+		final String message = exception.getBindingResult().getFieldErrors().stream()
 				.map(error -> error.getField() + ": " + error.getDefaultMessage())
 				.distinct()
 				.collect(Collectors.joining("; "));
@@ -47,9 +47,9 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(HandlerMethodValidationException.class)
 	@ApiResponse(responseCode = "400", description = "Request parameter validation failed")
 	public ResponseEntity<BasicResponse<Void>> handleHandlerMethodValidation(
-			HandlerMethodValidationException exception
+			final HandlerMethodValidationException exception
 	) {
-		String message = exception.getParameterValidationResults().stream()
+		final String message = exception.getParameterValidationResults().stream()
 				.flatMap(result -> result.getResolvableErrors().stream()
 						.map(error -> result.getMethodParameter().getParameterName() + ": " + error.getDefaultMessage()))
 				.distinct()
@@ -64,7 +64,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	@ApiResponse(responseCode = "400", description = "Required request parameter is missing")
 	public ResponseEntity<BasicResponse<Void>> handleMissingParameter(
-			MissingServletRequestParameterException exception
+			final MissingServletRequestParameterException exception
 	) {
 		log.warn("Missing request parameter: {}", exception.getParameterName());
 
@@ -74,7 +74,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	@ApiResponse(responseCode = "400", description = "Request parameter has an invalid type")
 	public ResponseEntity<BasicResponse<Void>> handleTypeMismatch(
-			MethodArgumentTypeMismatchException exception
+			final MethodArgumentTypeMismatchException exception
 	) {
 		log.warn("Invalid value '{}' for request parameter {}", exception.getValue(), exception.getName());
 
@@ -84,7 +84,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	@ApiResponse(responseCode = "400", description = "Request body is missing or malformed")
 	public ResponseEntity<BasicResponse<Void>> handleUnreadableMessage(
-			HttpMessageNotReadableException exception
+			final HttpMessageNotReadableException exception
 	) {
 		log.warn("Malformed request body", exception);
 
@@ -93,13 +93,13 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	@ApiResponse(responseCode = "500", description = "Unexpected server error")
-	public ResponseEntity<BasicResponse<Void>> handleUnexpectedException(Exception exception) {
+	public ResponseEntity<BasicResponse<Void>> handleUnexpectedException(final Exception exception) {
 		log.error("Unhandled application exception", exception);
 
 		return error(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
 	}
 
-	private ResponseEntity<BasicResponse<Void>> error(HttpStatus status, String message) {
+	private ResponseEntity<BasicResponse<Void>> error(final HttpStatus status, final String message) {
 		return ResponseEntity.status(status).body(new BasicResponse<>(null, message, false));
 	}
 }

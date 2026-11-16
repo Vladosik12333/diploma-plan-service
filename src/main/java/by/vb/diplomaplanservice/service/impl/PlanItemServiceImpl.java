@@ -32,8 +32,8 @@ public class PlanItemServiceImpl implements PlanItemService {
 
 	@Override
 	@Transactional
-	public List<PlanItem> createItems(PlanVariant variant, LlmPlan plan) {
-		List<PlanItem> items = Stream.ofNullable(plan.days())
+	public List<PlanItem> createItems(final PlanVariant variant, final LlmPlan plan) {
+		final List<PlanItem> items = Stream.ofNullable(plan.days())
 				.flatMap(List::stream)
 				.filter(Objects::nonNull)
 				.filter(day -> Objects.nonNull(day.date()))
@@ -46,19 +46,19 @@ public class PlanItemServiceImpl implements PlanItemService {
 		return planItemRepository.saveAll(items);
 	}
 
-	private List<PlanItem> createDayItems(LlmPlanDay llmPlanDay) {
-		LocalDate date = llmPlanDay.date();
-		List<LlmPlanItem> llmItems = llmPlanDay.items();
+	private List<PlanItem> createDayItems(final LlmPlanDay llmPlanDay) {
+		final LocalDate date = llmPlanDay.date();
+		final List<LlmPlanItem> llmItems = llmPlanDay.items();
 
-		List<PlanItem> items = new ArrayList<>();
+		final List<PlanItem> items = new ArrayList<>();
 
 		if (Objects.isNull(llmItems)) {
 			return items;
 		}
 
-		for (LlmPlanItem llmItem : llmItems) {
+		for (final LlmPlanItem llmItem : llmItems) {
 			if (llmItem != null && StringUtils.isNotBlank(llmItem.name())) {
-				PlanItem item = new PlanItem();
+				final PlanItem item = new PlanItem();
 
 				item.setDayDate(date);
 				item.setPosition(items.size() + 1);
@@ -81,7 +81,7 @@ public class PlanItemServiceImpl implements PlanItemService {
 		return items;
 	}
 
-	private BigDecimal toCoordinate(BigDecimal value, BigDecimal max) {
+	private BigDecimal toCoordinate(final BigDecimal value, final BigDecimal max) {
 		if (value == null || value.abs().compareTo(max) > 0) {
 			return null;
 		}
@@ -89,7 +89,7 @@ public class PlanItemServiceImpl implements PlanItemService {
 		return value.setScale(PlanConstants.COORDINATE_SCALE, RoundingMode.HALF_UP);
 	}
 
-	private Integer toCost(Integer value) {
+	private Integer toCost(final Integer value) {
 		if (value == null || value < 0) {
 			return null;
 		}

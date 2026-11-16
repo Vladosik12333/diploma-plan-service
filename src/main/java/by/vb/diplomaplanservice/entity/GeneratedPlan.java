@@ -57,12 +57,12 @@ public class GeneratedPlan {
 	@OneToMany(mappedBy = "generatedPlan", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PlanVariant> variants = new ArrayList<>();
 
-	public void addVariant(PlanVariant variant) {
+	public void addVariant(final PlanVariant variant) {
 		variant.setGeneratedPlan(this);
 		variants.add(variant);
 	}
 
-	public Optional<PlanVariant> findVariant(PlanVariantType type) {
+	public Optional<PlanVariant> findVariant(final PlanVariantType type) {
 		return variants.stream().filter(variant -> variant.getType() == type).findFirst();
 	}
 }

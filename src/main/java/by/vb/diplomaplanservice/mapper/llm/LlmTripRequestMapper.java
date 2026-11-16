@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LlmTripRequestMapper implements Mapper<TripResponse, LlmTripRequest> {
 	@Override
-	public LlmTripRequest mapTo(TripResponse source) {
+	public LlmTripRequest mapTo(final TripResponse source) {
 		return new LlmTripRequest(source.title(), source.location().city(), source.location().country(),
 				source.startDate(), source.endDate(), source.budgetAmount(), source.currency(),
 				source.categories().stream()

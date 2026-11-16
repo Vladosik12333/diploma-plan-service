@@ -50,7 +50,7 @@ public class PlanController {
 	)
 	public BasicResponse<GeneratedPlanSummaryResponse> generatePlan(
 			@Parameter(description = "Owner of the trip", example = "1") @RequestParam @Positive
-			Long userId, @Valid @RequestBody GeneratePlanRequest request
+			final Long userId, @Valid @RequestBody final GeneratePlanRequest request
 	) {
 		log.info("Received plan generation request. userId={}, request={}", userId, request);
 		return new BasicResponse<>(planGenerationService.start(userId, request), StringUtils.EMPTY,
@@ -64,9 +64,9 @@ public class PlanController {
 	)
 	@ApiResponse(responseCode = "200", description = "Plans returned")
 	public BasicResponse<List<GeneratedPlanSummaryResponse>> getTripPlans(
-			@Parameter(description = "Trip ID", example = "1") @RequestParam @Positive Long tripId,
+			@Parameter(description = "Trip ID", example = "1") @RequestParam @Positive final Long tripId,
 			@Parameter(description = "Owner of the trip", example = "1") @RequestParam @Positive
-			Long userId
+			final Long userId
 	) {
 		log.info("Received trip plans request. tripId={}, userId={}", tripId, userId);
 		return new BasicResponse<>(generatedPlanService.getTripPlans(tripId, userId), StringUtils.EMPTY, true);
@@ -80,9 +80,9 @@ public class PlanController {
 	@ApiResponse(responseCode = "200", description = "Plan returned")
 	@ApiResponse(responseCode = "404", description = "Plan not found for this user")
 	public BasicResponse<GeneratedPlanResponse> getPlan(
-			@Parameter(description = "Plan ID", example = "1") @PathVariable @Positive Long planId,
+			@Parameter(description = "Plan ID", example = "1") @PathVariable @Positive final Long planId,
 			@Parameter(description = "Owner of the plan", example = "1") @RequestParam @Positive
-			Long userId
+			final Long userId
 	) {
 		log.info("Received plan details request. planId={}, userId={}", planId, userId);
 		return new BasicResponse<>(generatedPlanService.getPlan(planId, userId), StringUtils.EMPTY, true);

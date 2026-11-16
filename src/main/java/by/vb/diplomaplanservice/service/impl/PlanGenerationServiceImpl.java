@@ -20,9 +20,9 @@ public class PlanGenerationServiceImpl implements PlanGenerationService {
 	private final PlanGenerationWorker planGenerationWorker;
 
 	@Override
-	public GeneratedPlanSummaryResponse start(Long userId, GeneratePlanRequest request) {
-		TripResponse trip = tripServiceClient.getUserTrip(request.tripId(), userId);
-		GeneratedPlanSummaryResponse plan = generatedPlanService.create(userId, request);
+	public GeneratedPlanSummaryResponse start(final Long userId, final GeneratePlanRequest request) {
+		final TripResponse trip = tripServiceClient.getUserTrip(request.tripId(), userId);
+		final GeneratedPlanSummaryResponse plan = generatedPlanService.create(userId, request);
 
 		log.info("Started plan generation. planId={}, tripId={}, provider={}", plan.id(),
 				request.tripId(),

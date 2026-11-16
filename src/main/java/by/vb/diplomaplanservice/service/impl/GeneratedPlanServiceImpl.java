@@ -35,14 +35,14 @@ public class GeneratedPlanServiceImpl implements GeneratedPlanService {
 
 	@Override
 	@Transactional
-	public GeneratedPlanSummaryResponse create(Long userId, GeneratePlanRequest request) {
-		Long tripId = request.tripId();
+	public GeneratedPlanSummaryResponse create(final Long userId, final GeneratePlanRequest request) {
+		final Long tripId = request.tripId();
 
 		if (generatedPlanRepository.existsByTripIdAndStatusNotIn(tripId, GenerationStatus.FINAL_STATUSES)) {
 			throw new ApiException(HttpStatus.CONFLICT, "A plan is already being generated for this trip");
 		}
 
-		GeneratedPlan plan = new GeneratedPlan();
+		final GeneratedPlan plan = new GeneratedPlan();
 
 		plan.setTripId(request.tripId());
 		plan.setProvider(request.provider());
@@ -51,10 +51,10 @@ public class GeneratedPlanServiceImpl implements GeneratedPlanService {
 		plan.setModel(llmClient.model(request.provider()));
 
 		try {
-			GeneratedPlan saved = generatedPlanRepository.save(plan);
+			final GeneratedPlan saved = generatedPlanRepository.save(plan);
 
 			return generatedPlanSummaryResponseMapper.mapTo(saved);
-		} catch (DataIntegrityViolationException e) {
+		} catch (final DataIntegrityViolationException e) {
 			log.warn("Concurrent plan generation rejected. tripId={}", tripId);
 			throw new ApiException(HttpStatus.CONFLICT, "A plan is already being generated for this trip", e);
 		}
@@ -62,8 +62,8 @@ public class GeneratedPlanServiceImpl implements GeneratedPlanService {
 
 	@Override
 	@Transactional
-	public void updateStatus(Long planId, GenerationStatus status) {
-		GeneratedPlan plan = generatedPlanRepository.findById(planId)
+	public void updateStatus(final Long planId, final GenerationStatus status) {
+		final GeneratedPlan plan = generatedPlanRepository.findById(planId)
 				.orElseThrow(() -> new IllegalStateException("Plan not found"));
 
 		plan.setStatus(status);
@@ -73,8 +73,8 @@ public class GeneratedPlanServiceImpl implements GeneratedPlanService {
 	}
 
 	@Override
-	public List<GeneratedPlanSummaryResponse> getTripPlans(Long tripId, Long userId) {
-		List<GeneratedPlan> plans = generatedPlanRepository.findAllByTripIdAndUserIdOrderByCreatedAtDesc(
+	public List<GeneratedPlanSummaryResponse> getTripPlans(final Long tripId, final Long userId) {
+		final List<GeneratedPlan> plans = generatedPlanRepository.findAllByTripIdAndUserIdOrderByCreatedAtDesc(
 				tripId, userId);
 
 		log.info("Found {} plans for tripId={}, userId={}", plans.size(), tripId, userId);
@@ -83,8 +83,8 @@ public class GeneratedPlanServiceImpl implements GeneratedPlanService {
 	}
 
 	@Override
-	public GeneratedPlanResponse getPlan(Long planId, Long userId) {
-		GeneratedPlan plan = generatedPlanRepository.findByIdAndUserId(planId, userId)
+	public GeneratedPlanResponse getPlan(final Long planId, final Long userId) {
+		final GeneratedPlan plan = generatedPlanRepository.findByIdAndUserId(planId, userId)
 				.orElseThrow(() -> {
 					log.warn("Plan not found. planId={}, userId={}", planId, userId);
 					return new ApiException(HttpStatus.NOT_FOUND, "Plan not found");
@@ -96,7 +96,7 @@ public class GeneratedPlanServiceImpl implements GeneratedPlanService {
 	@EventListener(ApplicationReadyEvent.class)
 	@Transactional
 	public void failInterruptedGenerations() {
-		List<GeneratedPlan> interrupted = generatedPlanRepository.findAllByStatusNotIn(GenerationStatus.FINAL_STATUSES);
+		final List<GeneratedPlan> interrupted = generatedPlanRepository.findAllByStatusNotIn(GenerationStatus.FINAL_STATUSES);
 
 		interrupted.forEach(plan -> plan.setStatus(GenerationStatus.FAILED));
 		generatedPlanRepository.saveAll(interrupted);

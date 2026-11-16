@@ -23,17 +23,17 @@ public class PlanVariantServiceImpl implements PlanVariantService {
 
 	@Override
 	@Transactional
-	public PlanVariant createInitial(Long planId, LlmPlan llmPlan) {
+	public PlanVariant createInitial(final Long planId, final LlmPlan llmPlan) {
 		if (llmPlan.days() == null || llmPlan.days().isEmpty()) {
 			throw new IllegalStateException("Generated plan has no days");
 		}
 
-		PlanVariant variant = new PlanVariant();
+		final PlanVariant variant = new PlanVariant();
 
 		variant.setGeneratedPlan(generatedPlanRepository.getReferenceById(planId));
 		variant.setType(PlanVariantType.INITIAL);
 
-		PlanVariant saved = planVariantRepository.save(variant);
+		final PlanVariant saved = planVariantRepository.save(variant);
 
 		planItemService.createItems(saved, llmPlan);
 

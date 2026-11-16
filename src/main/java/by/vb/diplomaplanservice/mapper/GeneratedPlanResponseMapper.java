@@ -12,7 +12,7 @@ public class GeneratedPlanResponseMapper implements Mapper<GeneratedPlan, Genera
 	private final PlanVariantResponseMapper planVariantResponseMapper;
 
 	@Override
-	public GeneratedPlanResponse mapTo(GeneratedPlan entity) {
+	public GeneratedPlanResponse mapTo(final GeneratedPlan entity) {
 		return new GeneratedPlanResponse(entity.getId(), entity.getTripId(), entity.getStatus(),
 				entity.getProvider(), entity.getModel(),
 				entity.findVariant(PlanVariantType.INITIAL).map(planVariantResponseMapper::mapTo).orElse(null),

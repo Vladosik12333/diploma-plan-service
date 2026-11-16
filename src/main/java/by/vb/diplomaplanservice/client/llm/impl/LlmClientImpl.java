@@ -16,8 +16,8 @@ public class LlmClientImpl implements LlmClient {
 	private final Map<LlmProvider, String> chatModelNames;
 
 	@Override
-	public <T> T call(LlmProvider provider, LlmPrompt prompt, Class<T> responseType) {
-		T response = chatClients.get(provider).prompt()
+	public <T> T call(final LlmProvider provider, final LlmPrompt prompt, final Class<T> responseType) {
+		final T response = chatClients.get(provider).prompt()
 				.system(prompt.system())
 				.user(prompt.user())
 				.call()
@@ -31,7 +31,7 @@ public class LlmClientImpl implements LlmClient {
 	}
 
 	@Override
-	public String model(LlmProvider provider) {
+	public String model(final LlmProvider provider) {
 		return chatModelNames.get(provider);
 	}
 }

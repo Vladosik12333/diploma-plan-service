@@ -74,21 +74,21 @@ public class PromptFactoryImpl implements PromptFactory {
 	private final LlmPlanItemRequestMapper llmPlanItemRequestMapper;
 
 	@Override
-	public LlmPrompt planPrompt(TripResponse trip) {
-		LlmTripRequest llmTripRequest = llmTripRequestMapper.mapTo(trip);
+	public LlmPrompt planPrompt(final TripResponse trip) {
+		final LlmTripRequest llmTripRequest = llmTripRequestMapper.mapTo(trip);
 
 		return new LlmPrompt(PLAN_SYSTEM_PROMPT,
 				"Create a plan for this trip:\n" + jsonMapper.writeValueAsString(llmTripRequest));
 	}
 
 	@Override
-	public LlmPrompt reviewPrompt(TripResponse trip, PlanVariant variant) {
-		LlmTripRequest llmTripRequest = llmTripRequestMapper.mapTo(trip);
+	public LlmPrompt reviewPrompt(final TripResponse trip, final PlanVariant variant) {
+		final LlmTripRequest llmTripRequest = llmTripRequestMapper.mapTo(trip);
 
-		List<LlmPlanItemRequest> items =
+		final List<LlmPlanItemRequest> items =
 				variant.getItems().stream().map(llmPlanItemRequestMapper::mapTo).toList();
 
-		LlmReviewRequest input = new LlmReviewRequest(llmTripRequest, items);
+		final LlmReviewRequest input = new LlmReviewRequest(llmTripRequest, items);
 
 		return new LlmPrompt(REVIEW_SYSTEM_PROMPT, "Review this plan:\n" + jsonMapper.writeValueAsString(input));
 	}

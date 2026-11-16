@@ -18,7 +18,7 @@ public class PlanVariantResponseMapper implements Mapper<PlanVariant, PlanVarian
 	private final PlanReviewResponseMapper planReviewResponseMapper;
 
 	@Override
-	public PlanVariantResponse mapTo(PlanVariant entity) {
+	public PlanVariantResponse mapTo(final PlanVariant entity) {
 		return new PlanVariantResponse(entity.getId(), entity.getType(),
 				entity.getItems().stream().sorted(ITEM_ORDER).map(planItemResponseMapper::mapTo).toList(),
 				entity.getReview() == null ? null : planReviewResponseMapper.mapTo(entity.getReview()));

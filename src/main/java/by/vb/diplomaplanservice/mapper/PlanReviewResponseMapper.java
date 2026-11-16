@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PlanReviewResponseMapper implements Mapper<PlanReview, PlanReviewResponse> {
 	@Override
-	public PlanReviewResponse mapTo(PlanReview entity) {
+	public PlanReviewResponse mapTo(final PlanReview entity) {
 		return new PlanReviewResponse(entity.getProvider(), entity.getModel(), entity.getPreferenceFit(),
 				entity.getVariety(), entity.getPacing(), entity.getCoherence(), entity.getBudgetFit(),
 				entity.getOverallScore(), entity.getSummary());

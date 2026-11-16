@@ -48,12 +48,12 @@ public class PlanVariant {
 	@OneToOne(mappedBy = "planVariant", cascade = CascadeType.ALL, orphanRemoval = true)
 	private PlanReview review;
 
-	public void addItem(PlanItem item) {
+	public void addItem(final PlanItem item) {
 		item.setPlanVariant(this);
 		items.add(item);
 	}
 
-	public void attachReview(PlanReview review) {
+	public void attachReview(final PlanReview review) {
 		review.setPlanVariant(this);
 		this.review = review;
 	}
