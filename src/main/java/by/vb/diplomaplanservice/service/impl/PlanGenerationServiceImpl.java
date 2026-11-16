@@ -21,7 +21,7 @@ public class PlanGenerationServiceImpl implements PlanGenerationService {
 
 	@Override
 	public GeneratedPlanSummaryResponse start(final Long userId, final GeneratePlanRequest request) {
-		final TripResponse trip = tripServiceClient.getUserTrip(request.tripId(), userId);
+		final TripResponse trip = tripServiceClient.getUserTripResponse(request.tripId(), userId).data();
 		final GeneratedPlanSummaryResponse plan = generatedPlanService.create(userId, request);
 
 		log.info("Started plan generation. planId={}, tripId={}, provider={}", plan.id(),
