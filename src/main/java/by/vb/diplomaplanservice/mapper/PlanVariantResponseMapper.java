@@ -12,7 +12,6 @@ import java.util.Comparator;
 @RequiredArgsConstructor
 public class PlanVariantResponseMapper implements Mapper<PlanVariant, PlanVariantResponse> {
 	private static final Comparator<PlanItem> ITEM_ORDER = Comparator.comparing(PlanItem::getDayDate)
-			.thenComparing(PlanItem::getPeriod)
 			.thenComparing(PlanItem::getPosition);
 
 	private final PlanItemResponseMapper planItemResponseMapper;

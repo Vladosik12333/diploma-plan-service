@@ -8,8 +8,9 @@ import org.springframework.stereotype.Component;
 public class PlanItemResponseMapper implements Mapper<PlanItem, PlanItemResponse> {
 	@Override
 	public PlanItemResponse mapTo(PlanItem entity) {
-		return new PlanItemResponse(entity.getId(), entity.getDayDate(), entity.getPeriod(), entity.getPosition(),
-				entity.getName(), entity.getGooglePlaceId(), entity.getCategory(), entity.getEstimatedDurationMin(),
-				entity.getIssue());
+		return new PlanItemResponse(entity.getId(), entity.getDayDate(), entity.getPosition(), entity.getName(),
+				entity.getGooglePlaceId(), entity.getCategory(), entity.getEstimatedDurationMin(), entity.getLatitude(),
+				entity.getLongitude(), entity.getAddress(), entity.getStartTime(), entity.getEndTime(),
+				entity.getEstimatedCost(), entity.getOpenTime(), entity.getCloseTime(), entity.getIssue());
 	}
 }

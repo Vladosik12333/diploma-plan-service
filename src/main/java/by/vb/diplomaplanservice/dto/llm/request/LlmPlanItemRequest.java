@@ -1,15 +1,22 @@
 package by.vb.diplomaplanservice.dto.llm.request;
 
-import by.vb.diplomaplanservice.entity.enums.DayPeriod;
-
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public record LlmPlanItemRequest(
 	LocalDate date,
-	DayPeriod period,
 	Integer position,
 	String name,
 	String category,
-	Integer estimatedDurationMin
+	Integer estimatedDurationMin,
+	BigDecimal latitude,
+	BigDecimal longitude,
+	String address,
+	LocalTime startTime,
+	LocalTime endTime,
+	Integer estimatedCost,
+	LocalTime openTime,
+	LocalTime closeTime
 ) {
 }

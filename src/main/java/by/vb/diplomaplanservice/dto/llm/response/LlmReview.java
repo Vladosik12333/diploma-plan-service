@@ -7,7 +7,7 @@ public record LlmReview(
 	Integer preferenceFit,
 	@JsonPropertyDescription("Score 1-10: diversity of activities across the trip")
 	Integer variety,
-	@JsonPropertyDescription("Score 1-10: whether each day and period is realistic and not overloaded")
+	@JsonPropertyDescription("Score 1-10: whether each day is realistic and not overloaded")
 	Integer pacing,
 	@JsonPropertyDescription("Score 1-10: geographic and logical sense of each day")
 	Integer coherence,
