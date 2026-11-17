@@ -7,6 +7,7 @@ import by.vb.diplomaplanservice.dto.llm.response.LlmReview;
 import by.vb.diplomaplanservice.dto.trip.TripResponse;
 import by.vb.diplomaplanservice.entity.PlanVariant;
 import by.vb.diplomaplanservice.entity.enums.GenerationStatus;
+import by.vb.diplomaplanservice.entity.enums.LlmCallType;
 import by.vb.diplomaplanservice.entity.enums.LlmProvider;
 import by.vb.diplomaplanservice.service.GeneratedPlanService;
 import by.vb.diplomaplanservice.service.PlanGenerationWorker;
@@ -35,14 +36,14 @@ public class PlanGenerationWorkerImpl implements PlanGenerationWorker {
 		try {
 			generatedPlanService.updateStatus(planId, GenerationStatus.GENERATING);
 
-			final LlmPlan llmPlan = llmClient.call(provider, promptFactory.planPrompt(trip),
+			final LlmPlan llmPlan = llmClient.call(planId, LlmCallType.PLAN, provider, promptFactory.planPrompt(trip),
 					LlmPlan.class);
 
 			final PlanVariant initial = planVariantService.createInitial(planId, llmPlan);
 
 			generatedPlanService.updateStatus(planId, GenerationStatus.REVIEWING);
 
-			final LlmReview llmReview = llmClient.call(provider,
+			final LlmReview llmReview = llmClient.call(planId, LlmCallType.REVIEW, provider,
 					promptFactory.reviewPrompt(trip, initial), LlmReview.class);
 
 			planReviewService.create(initial, provider, llmReview);
