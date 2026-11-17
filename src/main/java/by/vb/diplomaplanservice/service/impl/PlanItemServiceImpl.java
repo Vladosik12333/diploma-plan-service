@@ -13,8 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +23,6 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PlanItemServiceImpl implements PlanItemService {
-	private static final BigDecimal MAX_LATITUDE = BigDecimal.valueOf(90);
-	private static final BigDecimal MAX_LONGITUDE = BigDecimal.valueOf(180);
-
 	private final PlanItemRepository planItemRepository;
 
 	@Override
@@ -65,14 +60,10 @@ public class PlanItemServiceImpl implements PlanItemService {
 				item.setName(StringUtils.truncate(llmItem.name(), PlanConstants.ITEM_NAME_MAX_LENGTH));
 				item.setCategory(StringUtils.truncate(llmItem.category(), PlanConstants.CATEGORY_MAX_LENGTH));
 				item.setEstimatedDurationMin(llmItem.estimatedDurationMin());
-				item.setLatitude(toCoordinate(llmItem.latitude(), MAX_LATITUDE));
-				item.setLongitude(toCoordinate(llmItem.longitude(), MAX_LONGITUDE));
-				item.setAddress(StringUtils.truncate(llmItem.address(), PlanConstants.ADDRESS_MAX_LENGTH));
+				item.setImportance(toImportance(llmItem.importance()));
 				item.setStartTime(llmItem.startTime());
 				item.setEndTime(llmItem.endTime());
 				item.setEstimatedCost(toCost(llmItem.estimatedCost()));
-				item.setOpenTime(llmItem.openTime());
-				item.setCloseTime(llmItem.closeTime());
 
 				items.add(item);
 			}
@@ -81,12 +72,12 @@ public class PlanItemServiceImpl implements PlanItemService {
 		return items;
 	}
 
-	private BigDecimal toCoordinate(final BigDecimal value, final BigDecimal max) {
-		if (value == null || value.abs().compareTo(max) > 0) {
+	private Integer toImportance(final Integer value) {
+		if (value == null || value < PlanConstants.MIN_IMPORTANCE || value > PlanConstants.MAX_IMPORTANCE) {
 			return null;
 		}
 
-		return value.setScale(PlanConstants.COORDINATE_SCALE, RoundingMode.HALF_UP);
+		return value;
 	}
 
 	private Integer toCost(final Integer value) {

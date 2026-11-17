@@ -10,7 +10,6 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -31,6 +30,9 @@ public class PlanItem {
 	@JoinColumn(name = "plan_variant_id", nullable = false)
 	private PlanVariant planVariant;
 
+	@Column(name = "google_place_id")
+	private String googlePlaceId;
+
 	@Column(name = "day_date", nullable = false)
 	private LocalDate dayDate;
 
@@ -40,23 +42,13 @@ public class PlanItem {
 	@Column(nullable = false)
 	private String name;
 
-	@Column(name = "google_place_id")
-	private String googlePlaceId;
-
 	@Column(length = 64)
 	private String category;
 
 	@Column(name = "estimated_duration_min")
 	private Integer estimatedDurationMin;
 
-	@Column(precision = 9, scale = 6)
-	private BigDecimal latitude;
-
-	@Column(precision = 9, scale = 6)
-	private BigDecimal longitude;
-
-	@Column(length = 500)
-	private String address;
+	private Integer importance;
 
 	@Column(name = "start_time")
 	private LocalTime startTime;
@@ -66,12 +58,6 @@ public class PlanItem {
 
 	@Column(name = "estimated_cost")
 	private Integer estimatedCost;
-
-	@Column(name = "open_time")
-	private LocalTime openTime;
-
-	@Column(name = "close_time")
-	private LocalTime closeTime;
 
 	@Enumerated(EnumType.STRING)
 	@Column(length = 30)

@@ -3,15 +3,12 @@ package by.vb.diplomaplanservice.service.impl;
 import by.vb.diplomaplanservice.client.llm.LlmClient;
 import by.vb.diplomaplanservice.client.llm.PromptFactory;
 import by.vb.diplomaplanservice.dto.llm.response.LlmPlan;
-import by.vb.diplomaplanservice.dto.llm.response.LlmReview;
 import by.vb.diplomaplanservice.dto.trip.TripResponse;
-import by.vb.diplomaplanservice.entity.PlanVariant;
 import by.vb.diplomaplanservice.entity.enums.GenerationStatus;
 import by.vb.diplomaplanservice.entity.enums.LlmCallType;
 import by.vb.diplomaplanservice.entity.enums.LlmProvider;
 import by.vb.diplomaplanservice.service.GeneratedPlanService;
 import by.vb.diplomaplanservice.service.PlanGenerationWorker;
-import by.vb.diplomaplanservice.service.PlanReviewService;
 import by.vb.diplomaplanservice.service.PlanVariantService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +22,6 @@ import org.springframework.stereotype.Service;
 public class PlanGenerationWorkerImpl implements PlanGenerationWorker {
 	private final GeneratedPlanService generatedPlanService;
 	private final PlanVariantService planVariantService;
-	private final PlanReviewService planReviewService;
 	private final LlmClient llmClient;
 	private final PromptFactory promptFactory;
 
@@ -39,14 +35,7 @@ public class PlanGenerationWorkerImpl implements PlanGenerationWorker {
 			final LlmPlan llmPlan = llmClient.call(planId, LlmCallType.PLAN, provider, promptFactory.planPrompt(trip),
 					LlmPlan.class);
 
-			final PlanVariant initial = planVariantService.createInitial(planId, llmPlan);
-
-			generatedPlanService.updateStatus(planId, GenerationStatus.REVIEWING);
-
-			final LlmReview llmReview = llmClient.call(planId, LlmCallType.REVIEW, provider,
-					promptFactory.reviewPrompt(trip, initial), LlmReview.class);
-
-			planReviewService.create(initial, provider, llmReview);
+			planVariantService.createInitial(planId, llmPlan);
 
 			generatedPlanService.updateStatus(planId, GenerationStatus.DONE);
 		} catch (final Exception e) {

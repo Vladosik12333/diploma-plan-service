@@ -6,4 +6,5 @@
     <include file="db/changelog/changes/001-create-plan-tables.sql"/>
     <include file="db/changelog/changes/002-update-plan-items.sql"/>
     <include file="db/changelog/changes/003-create-llm-journal.sql"/>
+    <include file="db/changelog/changes/004-normalize-places.sql"/>
 </databaseChangeLog>

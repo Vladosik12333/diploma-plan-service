@@ -1,7 +1,6 @@
 package by.vb.diplomaplanservice.client.llm.impl;
 
 import by.vb.diplomaplanservice.client.llm.LlmClient;
-import by.vb.diplomaplanservice.dto.llm.request.LlmPrompt;
 import by.vb.diplomaplanservice.entity.enums.LlmCallStatus;
 import by.vb.diplomaplanservice.entity.enums.LlmCallType;
 import by.vb.diplomaplanservice.entity.enums.LlmProvider;
@@ -12,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.ResponseEntity;
 import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -25,7 +25,7 @@ public class LlmClientImpl implements LlmClient {
 	private final LlmJournalService llmJournalService;
 
 	@Override
-	public <T> T call(final Long planId, final LlmCallType type, final LlmProvider provider, final LlmPrompt prompt,
+	public <T> T call(final Long planId, final LlmCallType type, final LlmProvider provider, final Prompt prompt,
 			final Class<T> responseType) {
 		final long startedAt = System.currentTimeMillis();
 
@@ -34,9 +34,7 @@ public class LlmClientImpl implements LlmClient {
 		Exception error = null;
 
 		try {
-			final ResponseEntity<ChatResponse, T> response = chatClients.get(provider).prompt()
-					.system(prompt.system())
-					.user(prompt.user())
+			final ResponseEntity<ChatResponse, T> response = chatClients.get(provider).prompt(prompt)
 					.call()
 					.responseEntity(responseType);
 
@@ -67,7 +65,7 @@ public class LlmClientImpl implements LlmClient {
 	}
 
 	private void journal(final Long planId, final LlmCallType type, final LlmProvider provider,
-			final LlmPrompt prompt, final ChatResponse response, final LlmCallStatus status, final long durationMs,
+			final Prompt prompt, final ChatResponse response, final LlmCallStatus status, final long durationMs,
 			final Exception error) {
 		try {
 			llmJournalService.create(planId, type, provider, model(provider), prompt, response, status, durationMs,

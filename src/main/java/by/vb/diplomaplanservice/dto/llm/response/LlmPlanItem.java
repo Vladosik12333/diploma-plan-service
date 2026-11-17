@@ -3,7 +3,6 @@ package by.vb.diplomaplanservice.dto.llm.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 
-import java.math.BigDecimal;
 import java.time.LocalTime;
 
 public record LlmPlanItem(
@@ -13,12 +12,8 @@ public record LlmPlanItem(
 	String category,
 	@JsonPropertyDescription("Estimated visit duration in minutes, excluding travel")
 	Integer estimatedDurationMin,
-	@JsonPropertyDescription("Latitude of the place in decimal degrees")
-	BigDecimal latitude,
-	@JsonPropertyDescription("Longitude of the place in decimal degrees")
-	BigDecimal longitude,
-	@JsonPropertyDescription("Street address of the place")
-	String address,
+	@JsonPropertyDescription("How important the place is for this traveller, from 1 (optional) to 5 (must see)")
+	Integer importance,
 	@JsonPropertyDescription("Planned arrival time in format HH:mm")
 	@JsonFormat(pattern = TIME_PATTERN)
 	LocalTime startTime,
@@ -26,13 +21,7 @@ public record LlmPlanItem(
 	@JsonFormat(pattern = TIME_PATTERN)
 	LocalTime endTime,
 	@JsonPropertyDescription("Estimated cost per person in the trip currency, rounded to a whole number, 0 if free")
-	Integer estimatedCost,
-	@JsonPropertyDescription("Opening time on this date in format HH:mm, null if always open")
-	@JsonFormat(pattern = TIME_PATTERN)
-	LocalTime openTime,
-	@JsonPropertyDescription("Closing time on this date in format HH:mm, null if always open")
-	@JsonFormat(pattern = TIME_PATTERN)
-	LocalTime closeTime
+	Integer estimatedCost
 ) {
 	private static final String TIME_PATTERN = "HH:mm[:ss][XXX]";
 }

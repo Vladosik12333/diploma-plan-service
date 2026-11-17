@@ -1,7 +1,6 @@
 package by.vb.diplomaplanservice.service.impl;
 
 import by.vb.diplomaplanservice.constant.PlanConstants;
-import by.vb.diplomaplanservice.dto.llm.request.LlmPrompt;
 import by.vb.diplomaplanservice.entity.LlmJournal;
 import by.vb.diplomaplanservice.entity.enums.LlmCallStatus;
 import by.vb.diplomaplanservice.entity.enums.LlmCallType;
@@ -14,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.ai.chat.metadata.Usage;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.model.Generation;
+import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +28,7 @@ public class LlmJournalServiceImpl implements LlmJournalService {
 	@Override
 	@Transactional
 	public LlmJournal create(final Long planId, final LlmCallType type, final LlmProvider provider,
-			final String model, final LlmPrompt prompt, final ChatResponse response, final LlmCallStatus status,
+			final String model, final Prompt prompt, final ChatResponse response, final LlmCallStatus status,
 			final long durationMs, final Exception error) {
 		final LlmJournal journal = new LlmJournal();
 
@@ -38,8 +38,8 @@ public class LlmJournalServiceImpl implements LlmJournalService {
 		journal.setModel(model);
 		journal.setStatus(status);
 		journal.setDurationMs(durationMs);
-		journal.setSystemPrompt(prompt.system());
-		journal.setUserPrompt(prompt.user());
+		journal.setSystemPrompt(prompt.getSystemMessage().getText());
+		journal.setUserPrompt(prompt.getUserMessage().getText());
 
 		if (response != null) {
 			final Usage usage = response.getMetadata().getUsage();

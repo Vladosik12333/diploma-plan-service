@@ -6,9 +6,9 @@ import lombok.experimental.UtilityClass;
 public final class PlanConstants {
 	public static final int MIN_SCORE = 1;
 	public static final int MAX_SCORE = 10;
+	public static final int MIN_IMPORTANCE = 1;
+	public static final int MAX_IMPORTANCE = 5;
 	public static final int SUMMARY_MAX_LENGTH = 500;
 	public static final int ITEM_NAME_MAX_LENGTH = 255;
 	public static final int CATEGORY_MAX_LENGTH = 64;
-	public static final int ADDRESS_MAX_LENGTH = 500;
-	public static final int COORDINATE_SCALE = 6;
 	public static final int ERROR_MESSAGE_MAX_LENGTH = 500;}
